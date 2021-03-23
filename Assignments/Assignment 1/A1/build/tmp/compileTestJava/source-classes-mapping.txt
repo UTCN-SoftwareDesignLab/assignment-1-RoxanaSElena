@@ -1,0 +1,14 @@
+services/UserServicesTest.java
+ services.UserServicesTest
+services/ClientServicesTest.java
+ services.ClientServicesTest
+repository/AccountTest.java
+ repository.AccountTest
+repository/ClientTest.java
+ repository.ClientTest
+services/AuthentificationServicesTest.java
+ services.AuthentificationServicesTest
+services/AccountServicesTest.java
+ services.AccountServicesTest
+repository/UserTest.java
+ repository.UserTest
