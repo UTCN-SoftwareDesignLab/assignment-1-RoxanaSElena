@@ -1,6 +1,7 @@
 package controller;
 
-import model.Account;
+import model.DTO.TransferDTO;
+import model.validation.Notification;
 import service.account.AccountService;
 import service.client.ClientService;
 import view.TransferView;
@@ -28,33 +29,17 @@ public class TransferController {
         @Override
         public void actionPerformed(ActionEvent e) {
 
-            String sendTo = transferView.getSendTo();
-            String sendFrom = transferView.getSendFrom();
-            int amount = transferView.getAmount();
-
-            int idToSend = clientService.findByName(sendTo).getId();
-            int idFrom = clientService.findByName(sendFrom).getId();
-
-            Account accountToSend = accountService.findByClientId(idToSend);
-            Account accountFrom = accountService.findByClientId(idFrom);
-
-            int amountInitToSent = accountToSend.getAmount();
-            int amountInitFrom = accountFrom.getAmount();
-
-            if (amount <= amountInitFrom)
+            TransferDTO transferDTO = transferView.getTransferDTO();
+            Notification<Boolean> notification = accountService.transfer(transferDTO);
+            if(notification.hasErrors())
             {
-                accountToSend.setAmount(amountInitToSent + amount);
-                accountService.update(accountToSend);
+                JOptionPane.showMessageDialog(transferView.getContentPane(),"Transaction cannot be done");
 
-                accountFrom.setAmount(amountInitFrom - amount);
-                accountService.update(accountFrom);
-                JOptionPane.showMessageDialog(transferView.getContentPane(),"TransactionSuccess");
             }
             else
             {
-                JOptionPane.showMessageDialog(transferView.getContentPane(),"Not enough account balance for the transfer");
+                JOptionPane.showMessageDialog(transferView.getContentPane(),"Transaction successfully done!");
             }
-
         }
     }
 

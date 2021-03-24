@@ -35,7 +35,7 @@ public class AuthentificationServiceMySQL implements AuthentificationService {
         User user = new UserBuilder()
                 .setUsername(username)
                 .setPassword(password)
-                .setRoles(customerRole)
+                .setRoles(Collections.singletonList(customerRole))
                 .build();
 
         UserValidator userValidator = new UserValidator(user);

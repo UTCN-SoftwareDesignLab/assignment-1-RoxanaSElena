@@ -78,6 +78,20 @@ public class AccountRepositoryMySQL implements  AccountRepository{
     }
 
     @Override
+    public Account findByClientCNP(String cnp) {
+        try{
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM `" + ACCOUNT + "` WHERE CNP = \'" + cnp +"\'");
+            ResultSet resultSet = statement.executeQuery();
+            while(resultSet.next()){
+                return getAccount(resultSet);
+            }
+        } catch (SQLException e){
+
+        }
+        return null;
+    }
+
+    @Override
     public boolean save(Account account) {
         try {
             PreparedStatement insertStatement = connection
@@ -135,5 +149,30 @@ public class AccountRepositoryMySQL implements  AccountRepository{
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public Account findById(int id) {
+        String sql = "Select * from `" + ACCOUNT + "` WHERE id = " + id;
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(sql);
+            if (resultSet.next()) {
+                return getAccountFromResultSet(resultSet);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return null;
+    }
+
+    private Account getAccountFromResultSet(ResultSet rs) throws SQLException {
+        return new AccountBuilder().setId(rs.getInt("id"))
+                .setIdNb(rs.getInt("idNo"))
+                .setType(rs.getString("type"))
+                .setAmount(rs.getInt("amount"))
+                .setDateOfCreation(rs.getDate("dateCreation"))
+                .build();
     }
 }

@@ -28,7 +28,7 @@ public class UserBuilder {
         return this;
     }
 
-    public UserBuilder setRoles(Role roles) {
+    public UserBuilder setRoles(List<Role> roles) {
         user.setRoles(roles);
         return this;
     }

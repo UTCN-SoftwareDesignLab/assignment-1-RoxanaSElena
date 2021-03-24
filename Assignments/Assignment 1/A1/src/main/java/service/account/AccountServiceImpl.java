@@ -1,6 +1,7 @@
 package service.account;
 
 import model.Account;
+import model.DTO.TransferDTO;
 import model.validation.Notification;
 import repository.account.AccountRepository;
 
@@ -52,5 +53,106 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public void removeAll() {
         accountRepository.removeAll();
+    }
+
+    @Override
+    public Notification<Account> getAccountById(int id) {
+        Notification<Account> notification = new Notification<>();
+        Account accountToFind = accountRepository.findById(id);
+        if(accountToFind == null)
+        {
+            notification.setResult(null);
+        }
+        else
+        {
+            notification.setResult(accountToFind);
+        }
+        return notification;
+    }
+
+    @Override
+    public Account findByClientCNP(String cnp) {
+        return findByClientCNP(cnp);
+    }
+
+    @Override
+    public Notification<Boolean> transfer(TransferDTO transferDTO) {
+        Notification<Boolean> notification = new Notification<>();
+        try
+        {
+            int amount = transferDTO.getAmount();
+
+            int idTo = findByClientCNP(transferDTO.getTo()).getId();
+            int idFrom = findByClientCNP(transferDTO.getTo()).getId();
+
+            Notification<Account> accountNotificationTo = getAccountById(idTo);
+            Notification<Account> accountNotificationFrom = getAccountById(idFrom);
+            if(accountNotificationTo.hasErrors() || accountNotificationFrom.hasErrors() )
+            {
+                notification.setResult(false);
+            }
+            else
+            {
+                Account accountTo = accountNotificationTo.getResult();
+                int accountToAmount = accountTo.getAmount();
+                Account accountFrom = accountNotificationFrom.getResult();
+                int accountFromAmount = accountFrom.getAmount();
+
+                if(accountFrom.getAmount() < amount) {
+                    notification.addError("Not emough money for the transfer");
+                    notification.setResult(false);
+                }
+
+                else
+                {
+                    accountTo.setAmount(accountToAmount + amount);
+                    accountFrom.setAmount(accountFromAmount - amount);
+                    notification.setResult(true);
+                }
+            }
+        }catch(Exception e)
+        {
+            notification.addError("Account balance not right for transaction");
+            notification.setResult(false);
+        }
+        return  notification;
+    }
+
+    @Override
+    public Notification<Boolean> payBill(TransferDTO transferDTO) {
+        Notification<Boolean> notification = new Notification<>();
+        try
+        {
+            int amount = transferDTO.getAmount();
+
+            int idFrom = findByClientCNP(transferDTO.getTo()).getId();
+
+            Notification<Account> accountNotificationFrom = getAccountById(idFrom);
+            if( accountNotificationFrom.hasErrors() )
+            {
+                notification.setResult(false);
+            }
+            else
+            {
+                Account accountFrom = accountNotificationFrom.getResult();
+                int accountFromAmount = accountFrom.getAmount();
+
+                if(accountFrom.getAmount() < amount) {
+                    notification.addError("Not emough money for the transfer");
+                    notification.setResult(false);
+                }
+
+                else
+                {
+                    accountFrom.setAmount(accountFromAmount - amount);
+                    notification.setResult(true);
+                }
+            }
+        }catch(Exception e)
+        {
+            notification.addError("Account balance not right for transaction");
+            notification.setResult(false);
+        }
+        return  notification;
     }
 }

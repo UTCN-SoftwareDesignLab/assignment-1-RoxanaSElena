@@ -54,13 +54,14 @@ public class RightsRolesRepositoryMySQL implements RightsRolesRepository {
             ResultSet roleResultSet = statement.executeQuery(fetchRoleSql);
             roleResultSet.next();
             Long roleId = roleResultSet.getLong("id");
-            String roleTitle = roleResultSet.getString("role");
-            return new Role(roleId, roleTitle);
+            //String roleTitle = roleResultSet.getString("role");
+            return new Role(roleId, role, null);
         } catch (SQLException e) {
             e.printStackTrace();
+            return null;
         }
 
-        return null;
+        //
     }
 
     @Override
@@ -72,7 +73,7 @@ public class RightsRolesRepositoryMySQL implements RightsRolesRepository {
             ResultSet roleResultSet = statement.executeQuery(fetchRoleSql);
             roleResultSet.next();
             String roleTitle = roleResultSet.getString("role");
-            return new Role(roleId, roleTitle);
+            return new Role(roleId, roleTitle, null);
         } catch (SQLException e) {
             e.printStackTrace();
         }

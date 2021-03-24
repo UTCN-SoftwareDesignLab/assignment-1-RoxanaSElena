@@ -1,5 +1,7 @@
 package view;
 
+import model.DTO.TransferDTO;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -63,5 +65,12 @@ public class TransferView extends JFrame {
     public void setNotVisible()
     {
         this.setVisible(false);
+    }
+
+    public TransferDTO getTransferDTO()
+    {
+        TransferDTO transferDTO = new TransferDTO(sendTo.getText(), sendFrom.getText(), Integer.parseInt(amount.getText()));
+        return transferDTO;
+
     }
 }

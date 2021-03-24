@@ -10,7 +10,6 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static database.Constants.Tables.CLIENT;
 import static database.Constants.Tables.USER;
 
 public class UserRepositoryMySQL implements UserRepository{
@@ -57,7 +56,7 @@ public class UserRepositoryMySQL implements UserRepository{
                 User user = new UserBuilder()
                         .setUsername(userResultSet.getString("username"))
                         .setPassword(userResultSet.getString("password"))
-                         //.setRoles(rightsRolesRepository.findRolesForUser(userResultSet.getLong("id")))
+                         .setRoles(rightsRolesRepository.findRolesForUser(userResultSet.getLong("id")))
                         .build();
                 findByUsernameAndPasswordNotification.setResult(user);
                 return findByUsernameAndPasswordNotification;
@@ -134,40 +133,14 @@ public class UserRepositoryMySQL implements UserRepository{
             insertStatement.setString(1, user.getUsername());
             insertStatement.setString(2, user.getPassword());
             insertStatement.executeUpdate();
+
+
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
     }
-
-/*
-    @Override
-    public Notification<User> findById(Long userId) {
-        Notification<User> userNotification = new Notification<>();
-        try
-        {
-            Statement statement = connection.createStatement();
-            String fetchUserSql = "Select * from`" + USER + "` where id=" + userId;
-            ResultSet resultSet = statement.executeQuery(fetchUserSql);
-            if(resultSet.next())
-            {
-                User user = new UserBuilder()
-                        .setId(resultSet.getLong("id"))
-                        .setUsername(resultSet.getString("username"))
-                        .setPassword(resultSet.getString("password"))
-                        .build();
-                userNotification.setResult(user);
-                return userNotification;
-            }
-        }catch(SQLException e)
-        {
-            e.printStackTrace();
-
-        }
-        return userNotification;
-    }
-*/
 
     @Override
     public User findByName(String name) {
@@ -191,7 +164,7 @@ public class UserRepositoryMySQL implements UserRepository{
                 .setId(resultSet.getLong("id"))
                 .setUsername(resultSet.getString("username"))
                 .setPassword(resultSet.getString("password"))
-                //.setRoles((Role) rightsRolesRepository.findRolesForUser(resultSet.getLong("id")))
+                .setRoles(rightsRolesRepository.findRolesForUser(resultSet.getLong("id")))
                 .build();
     }
 }

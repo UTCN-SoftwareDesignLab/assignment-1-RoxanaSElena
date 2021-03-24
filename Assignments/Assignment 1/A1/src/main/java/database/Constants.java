@@ -1,10 +1,5 @@
 package database;
 
-import model.Role;
-import model.User;
-import model.builder.UserBuilder;
-import service.user.AuthentificationServiceMySQL;
-
 import java.util.*;
 
 import static database.Constants.Rights.*;
@@ -14,7 +9,7 @@ public class Constants {
 
     public static class Schemas {
         public static final String TEST = "test";
-        public static final String PRODUCTION = "bank";
+        public static final String PRODUCTION = "production";
 
         public static final String[] SCHEMAS = new String[]{TEST, PRODUCTION};
     }
@@ -30,16 +25,6 @@ public class Constants {
         public static final String USER_ROLE = "user_role";
 
         public static final String[] ORDERED_TABLES_FOR_CREATION = new String[]{USER, ROLE, RIGHT, ROLE_RIGHT, USER_ROLE, ACCOUNT, CLIENT, REPORT};
-    }
-
-    public static class Users
-    {
-       public static final User admin =
-                 new UserBuilder()
-                .setUsername("roxana@bank.com")
-                .setPassword(AuthentificationServiceMySQL.encodePassword("Roxana9*"))
-                .build();
-       public static final User[] ADMIN = new User[]{admin};
     }
 
     public static class Roles {

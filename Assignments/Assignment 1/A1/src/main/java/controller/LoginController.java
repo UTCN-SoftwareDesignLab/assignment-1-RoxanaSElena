@@ -1,13 +1,8 @@
 package controller;
 
-import database.Constants;
 import model.User;
-import model.builder.UserBuilder;
 import model.validation.Notification;
-import repository.user.UserRepository;
 import service.user.AuthentificationService;
-import service.user.AuthentificationServiceMySQL;
-import view.AdminView;
 import view.LoginView;
 
 import javax.swing.*;
@@ -47,16 +42,14 @@ public class LoginController {
                 JOptionPane.showMessageDialog(loginView.getContentPane(), loginNotification.getFormattedErrors());
             } else {
                 JOptionPane.showMessageDialog(loginView.getContentPane(), "Login successful!");
-                if(loginNotification.getResult().getUsername().equals(Constants.Users.admin.getUsername()) && loginNotification.getResult().getPassword().equals(Constants.Users.admin.getPassword()))
-
+               /* if(loginNotification.getResult().getRoles().get(0).getRole().equals(ADMINISTRATOR))
                 {
                     adminController.visible();
                 }
-
                 else
-                {
+                {*/
                     employeeController.visible();
-                }
+               // }
             }
         }
     }

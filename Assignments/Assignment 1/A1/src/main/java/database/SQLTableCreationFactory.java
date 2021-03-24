@@ -87,7 +87,7 @@ public class SQLTableCreationFactory {
                         "    ON UPDATE CASCADE);";
 
             case USER_ROLE:
-                return "CREATE TABLE IF NOT EXISTS user_role (" +
+                return "\tCREATE TABLE IF NOT EXISTS user_role (" +
                         "  id INT NOT NULL AUTO_INCREMENT," +
                         "  user_id INT NOT NULL," +
                         "  role_id INT NOT NULL," +

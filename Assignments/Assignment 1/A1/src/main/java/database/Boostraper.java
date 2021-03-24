@@ -6,15 +6,18 @@ import repository.security.RightsRolesRepository;
 import repository.security.RightsRolesRepositoryMySQL;
 import repository.user.UserRepository;
 import repository.user.UserRepositoryMySQL;
+import service.user.AuthentificationServiceMySQL;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 import static database.Constants.Rights.RIGHTS;
+import static database.Constants.Roles.ADMINISTRATOR;
 import static database.Constants.Roles.ROLES;
 import static database.Constants.Schemas.SCHEMAS;
 import static database.Constants.getRolesRights;
@@ -25,12 +28,12 @@ import static database.Constants.getRolesRights;
 public class Boostraper {
 
     private RightsRolesRepository rightsRolesRepository;
+    private UserRepository userRepository;
 
     public void execute() throws SQLException {
         dropAll();
 
         bootstrapTables();
-
         bootstrapUserData();
     }
 
@@ -48,7 +51,7 @@ public class Boostraper {
                     "TRUNCATE `user_role`;",
                     "DROP TABLE `user_role`;",
                     "TRUNCATE `role`;",
-                    "DROP TABLE  `book`, `role`, `user`;"
+                    "DROP TABLE   `role`, `user`, `account`, `client`,`report`;"
             };
 
             Arrays.stream(dropStatements).forEach(dropStatement -> {
@@ -90,11 +93,13 @@ public class Boostraper {
 
             JDBConnectionWrapper connectionWrapper = new JDBConnectionWrapper(schema);
             rightsRolesRepository = new RightsRolesRepositoryMySQL(connectionWrapper.getConnection());
+            userRepository = new UserRepositoryMySQL(connectionWrapper.getConnection(),rightsRolesRepository);
 
             bootstrapRoles();
             bootstrapRights();
             bootstrapRoleRight();
             bootstrapUserRoles();
+            boostrapUser();
 
         }
     }
@@ -127,6 +132,17 @@ public class Boostraper {
 
     private void bootstrapUserRoles() {
 
+    }
+
+    private void boostrapUser()
+    {
+        User admin = new UserBuilder()
+                .setId(1L)
+                .setUsername("roxana@bank.com")
+                .setPassword(AuthentificationServiceMySQL.encodePassword("Roxana9*"))
+                .setRoles(Collections.singletonList(rightsRolesRepository.findRoleByTitle(ADMINISTRATOR)))
+                .build();
+        userRepository.save(admin);
     }
 
 }
